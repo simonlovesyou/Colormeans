@@ -11,6 +11,13 @@ A library for retrieving a colorpalette from an image. The library is based on a
 - Works with every image that can be used with the HTML5 canvas element.
 - Supports every browser that has support for the canvas element.
 
+### Improvements on the original algorithm
+Improvements/Changes from the original algorithm include but is not limited to:
+
+1. If a datapoint (color) is too far away from the clusters it will be	 added to the set of clusters.
+2.	 With the possible addition of clusters as of I. and a user specified input 'numberOfClusters' there's a greater dataset to pick our final palette from.
+3. With a possible greater dataset as of 1. and 2. the algorithm will trim the dataset down to the final palette based on the population of the clusters.
+
 ### Example / Usage
 Include the file somewhere in your HTML document:
 
@@ -27,7 +34,7 @@ In your javascript file:
 	//Ex: [[84,121,128], [69, 173, 168], [157, 224, 169], [229, 255, 194]]
 ```
 
-## Customizing
+### Customizing
 ```javascript
 	var colorMeans = new Colormeans();
 	var image = document.getElementById('#imageID');
@@ -42,7 +49,7 @@ In your javascript file:
 
 
 ## Documentation
-- See /docs
+- Coming soon! Meanwhile, look at the jsdoc within colormeans.js
 
 ### TODO
 Features I or contributers will hopefully soon implement.
@@ -56,6 +63,8 @@ Features I or contributers will hopefully soon implement.
 ### Known issues
 - Will fail when the number of colors to be retrieved from an image exceeds the number of unique colors in the image.
 
+### Thanks
+To Anna Päärni and Christian Fischer for discussing and what improvements can be made to the original algorithm.
 
 ### Creator
 [simonlovesyou](https://github.com/simonlovesyou)
@@ -65,6 +74,6 @@ Features I or contributers will hopefully soon implement.
 
 Copyright (c) 2015 Simon Johansson 
 
-[Mail](SimonLJohansson92@gmail.com)
+JohanssonLSimon@gmail.com
 
 [Twitter](https://twitter.com/simonjohansosn)
