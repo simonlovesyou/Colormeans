@@ -1,4 +1,4 @@
-# Colomeans.js 
+# Colormeans.js 
 A library for retrieving a colorpalette from an image. The library is based on an improved version of the **fast** data-clustering algorithm **k-means** for best use with images.
 
 ### Core idea
