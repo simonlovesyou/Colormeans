@@ -5,7 +5,7 @@
  * @author Simon Johansson @simonlovesyou
  * @license MIT
  * @version 0.1
- * @see {@link https://github.com/simonlovesyou/colormeans} 
+ * @see {@link https://github.com/simonlovesyou/colormeans}
  */
 
 
@@ -14,11 +14,15 @@
  * @param {} image The image to be used in the canvas
  */
  var ImageCanvas = function (image) {
- 	this.canvas = document.createElement('canvas');
- 	this.context = this.canvas.getContext('2d');
- 	this.canvas.width = image.width;
- 	this.canvas.height = image.height;
- 	this.context.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+ 	if(typeof image === 'canvas') {
+ 		this.canvas = image;
+ 	} else {
+	  	this.canvas = document.createElement('canvas');
+	 	this.context = this.canvas.getContext('2d');
+	 	this.canvas.width = image.width;
+	 	this.canvas.height = image.height;
+	 	this.context.drawImage(image, 0, 0, this.canvas.width, this.canvas.height);
+ 	}
  };
 
 /**
@@ -32,7 +36,7 @@
 
 /**
  * Will create an array of RGB-values retrieved from the canvas/image data.
- * @method getRGBdata 
+ * @method getRGBdata
  * @param {array} data The datapoints from the canvas/image
  * @return points The RGB-array of all the pixel values
  */
@@ -64,7 +68,7 @@
  	this.palette = [];
  	this.DOMimage = new Image();
  	this.points = [];
- 	/*Default values*/ 
+ 	/*Default values*/
  	this.numberOfColors = 5;
  	this.numberOfClusters = this.numberOfColors;
  	this.minimumDifference = 0.5;
@@ -78,13 +82,13 @@
 	 * Improvements/Changes from the original algorithm include:
 	 * I.		If a datapoint (color) is too far away from the clusters it will be
 	 *			added to the set of clusters.
-	 * II.		With the possible addition of clusters as of I. and a user specified 
+	 * II.		With the possible addition of clusters as of I. and a user specified
 	 *			input 'numberOfClusters' there's a greater dataset to pick our final
 	 *			palette from.
 	 * III.		With a possible greater dataset as of I. and II. the algorithm will
-	 *			trim the dataset down to the final palette based on the population 
+	 *			trim the dataset down to the final palette based on the population
 	 * 			of the clusters.
-	 *			
+	 *
 	 * @summary Javascript implementation of the kmeans algorithm with some improvements better suited for getting a color palette.
  	 * @method kmeans
  	 * @param {array} points An array with RGB-values
@@ -113,7 +117,7 @@
 				var smallestDist = 10000000;
 				var id = 0;
 				for(var j = 0; j < clusters.length; j++) {
-					var distance = euclidean(p, clusters[j]); 
+					var distance = euclidean(p, clusters[j]);
 
 					if(distance < smallestDist) {
 						smallestDist = distance;
@@ -137,10 +141,10 @@
 						}
 
 					}
-				} 
+				}
 			//Populate the clusters.
 			clusterColors[id].push(p);
-			
+
 		}
 			//Shift through the clusters and set the clusters that are the most populated.
 			if(numberOfClusters !== numberOfColors) {
@@ -154,7 +158,7 @@
 						if(ok > clusterSize) {
 							index = j;
 							clusterSize = ok;
-						} 			
+						}
 					}
 					clusterColorsFinal.push(clusterColors[index]);
 					clusterColors.splice(index, 1);
@@ -180,7 +184,7 @@
 						}
 					}
 					return palette = clusters;
-				}	
+				}
 			}
 		}
 	}
@@ -200,21 +204,19 @@
 	 			count++;
 	 		}
 	 	}
-
 	 	var meanDistance = (distance/count);
-
 	 	return meanDistance*3;
 	 }
 
 /**
-  * Will retrieve a palette from an image. 
+  * Will retrieve a palette from an image.
   * @method getPalette
   * @param {Object} img The image object used to retrieve image data from
   * @param {number} numberOfColors The number of colors to be returned by the algorithm
-  * @param {Object} [options] A number of options to customize the way the algorithm 
+  * @param {Object} [options] A number of options to customize the way the algorithm
   *                 retrieves the number of colors
   *	@param {number} [options.numberOfClusters="5"] The number of random clusters to be initialized
-  * @param {number} [options.minimumDifference="0.5"] The minimum difference that is allowed when comparing euclidean distances 
+  * @param {number} [options.minimumDifference="0.5"] The minimum difference that is allowed when comparing euclidean distances
   * @param {number} [options.clusterThreshold="25"] The minimum difference when initializing the random clusters.
   * @example:
   * 	var options = {
@@ -226,52 +228,56 @@
   */
 Colormeans.prototype.getPalette = function(img, numberOfColors, options) { //numberOfClusters, minimumDifference, cluster_threshold, sort
  	/* Error handling */
+   console.log(typeof img);
  	if(typeof img === 'undefined') {
- 		throw new Error("Image is undefined.");	
- 	} else if(typeof img !== 'object') {
- 		throw new Error("Image is not an object.");	
+ 		throw new Error("Image is undefined.");
+ 	} else if(typeof img !== 'object' && img.nodeName !== 'CANVAS') {
+ 		throw new Error("Image is not an Image- or a Canvas-object.");
  	} else {
  		if(typeof numberOfColors !== 'undefined') {
  				if(typeof numberOfColors !== 'number' || numberOfColors%1!==0) {
- 					throw new Error("numberOfColors is not a whole number.");	
+ 					throw new Error("numberOfColors is not a whole number.");
  				} else {
- 					this.numberOfColors = numberOfColors; 
+ 					this.numberOfColors = numberOfColors;
  					this.numberOfClusters = numberOfColors;
  				}
- 			} 
+ 			}
  			if(typeof options !== 'undefined') {
  				if(typeof options !== 'object') {
- 					throw new Error("options is not an object.");	
+ 					throw new Error("options is not an object.");
  				} else {
  					if(typeof options.numberOfClusters !== 'undefined') {
  						if(typeof options.numberOfClusters !== 'number' || options.numberOfClusters%1!==0) {
- 							throw new Error("numberOfClusters is not a whole number.");	
+ 							throw new Error("numberOfClusters is not a whole number.");
  						} else {
- 							this.numberOfClusters = options.numberOfClusters; 
+ 							this.numberOfClusters = options.numberOfClusters;
  						}
- 					} 
+ 					}
  					if(numberOfColors > options.numberOfClusters) {
  						throw new Error("The number of clusters has to be a bigger number than the number of colors or equal.");
- 					} 
+ 					}
  					if(typeof options.minimumDifference !== 'undefined') {
  						if(typeof options.minimumDifference !== 'number') {
- 							throw new Error("minimumDifference is not a number.");	
+ 							throw new Error("minimumDifference is not a number.");
  						} else {
- 							this.minimumDifference = options.minimumDifference; 
+ 							this.minimumDifference = options.minimumDifference;
  						}
- 					} 
+ 					}
  					if(typeof options.clusterThreshold !== 'undefined') {
  						if(typeof options.clusterThreshold !== 'number') {
- 							throw new Error("cluster_threshold is not a number.");	
+ 							throw new Error("cluster_threshold is not a number.");
  						} else {
- 							this.cluster_threshold = options.clusterThreshold; 
+ 							this.cluster_threshold = options.clusterThreshold;
  						}
  					}
  				}
- 			} 
+ 			}
  		}
 
+ 		//If the image is the same one already stored it will use its
+ 		//data instead, for improved performance
  		if(this.DOMimage.src === img.src) {
+ 			console.log("Same canvas");
  			this.palette = this.kmeans(this.points, this.numberOfColors, this.numberOfClusters, this.minimumDifference, this.cluster_treshold);
  		} else {
  			this.DOMimage = img;
@@ -286,14 +292,14 @@ Colormeans.prototype.getPalette = function(img, numberOfColors, options) { //num
  	};
 
 /**
-  * Retrieves the inital random clusters from the image. 
+  * Retrieves the inital random clusters from the image.
   * The function will return an array populated with n number of clusters
   * specified by the parameter numberOfClusters.
-  * 
-  * This is an improved version of the inital k-means algorithm where 
-  * the initial dataclusters are picked more carefully based on their 
-  * euclidean distance between eachother. 
-  * 
+  *
+  * This is an improved version of the inital k-means algorithm where
+  * the initial dataclusters are picked more carefully based on their
+  * euclidean distance between eachother.
+  *
   * @method getRandomVector
   * @param {array} points The data points to retrieve the random clusters from
   * @param {number} numberOfClusters The number of clusters to get randomly selected
@@ -336,8 +342,8 @@ Colormeans.prototype.getPalette = function(img, numberOfColors, options) { //num
   function calculateCenter(clusterData) {
   	var vals = []
   	, plen = 0;
-  	for (var i = 0; i < clusterData[i].length; i++) { 
-  		vals.push(0); 
+  	for (var i = 0; i < clusterData[i].length; i++) {
+  		vals.push(0);
   	}
   	for (var i = 0; i < clusterData.length; i++) {
   		for (var j = 0; j < clusterData[i].length; j++) {
@@ -365,8 +371,8 @@ Colormeans.prototype.getPalette = function(img, numberOfColors, options) { //num
  /**
   * Will retrieve the euclidean distance between two datapoints.
   * @method euclidean
-  * @param {number} point1 
-  * @param {number} point2 
+  * @param {number} point1
+  * @param {number} point2
   * @return {number} - Euclidean distance
   */
   function euclidean(point1, point2) {
