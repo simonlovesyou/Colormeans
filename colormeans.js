@@ -172,12 +172,18 @@
 				//Recalculate centerpoints for the clusters if there's been a change
 				if(change) {
 					for(var i = 0; i < clusterColors.length; i++) {
+            console.log("oldCluster:");
+            console.log(clusters[i]);
 						var oldCluster = clusters[i];
 						var center = calculateCenter(clusterColors[i]);
+            console.log("center:");
+            console.log(center);
 						var newCenter = center;
 						var dist = euclidean(oldCluster, center);
 						clusters[i] = newCenter;
 						diff = diff > dist ? diff : dist;
+            console.log("diff:");
+            console.log(diff)
 
 						if(diff > dist) {
 							diff = dist;
@@ -322,7 +328,6 @@ Colormeans.prototype.getPalette = function(img, numberOfColors, options) { //num
   				break;
   			}
   		}
-
   		if (!found) {
   			seen.push(index);
   			clusters.push(points[index]);
@@ -352,7 +357,7 @@ Colormeans.prototype.getPalette = function(img, numberOfColors, options) { //num
   		plen++;
   	}
   	for (var i = 0; i < clusterData[i].length; i++) {
-  		vals[i] = vals[i] / plen;
+  		vals[i] = Math.floor(vals[i] / plen);
   	}
   	return vals;
   }
