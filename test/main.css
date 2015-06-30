@@ -1,0 +1,21 @@
+#images {
+	width:80%;
+	width:0 auto;
+	display:inline-block;
+}
+
+#images > div {
+	width:25%;
+	float:left;
+	padding-right:5%;
+}
+
+#images > div > img {
+	width:100%;
+	padding:5%;
+	float:left;
+}
+
+#images > div > p {
+	text-align:center;
+}
